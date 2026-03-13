@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<!--
+  ╔══════════════════════════════════════════════════════╗
+  ║         PANTALLA DE LOGIN — GESTIÓN DE EQUIPOS       ║
+  ║                                                      ║
+  ║  Esta es la primera pantalla que ve el usuario.      ║
+  ║  Su único trabajo es pedir email y contraseña        ║
+  ║  y verificar que sean correctos.                     ║
+  ╚══════════════════════════════════════════════════════╝
+-->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<!--
+  viewport: le dice al navegador que ajuste el tamaño
+  de la página al ancho del dispositivo.
+-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestión de Equipos — Iniciar Sesión</title>
+
+<!--
+  Importamos la fuente "DM Sans" de Google Fonts.
+  Esto se carga desde internet — si no hay conexión,
+  el navegador usa una fuente genérica del sistema.
+-->
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+  /* ═══════════════════════════════════════════
+     VARIABLES DE COLOR (Paleta del sistema)
+     ═══════════════════════════════════════════
+  */
+  :root {
+    --principal:   #195852;  /* botones, títulos  */
+    --secundario:  #1E9282;  /* acentos, íconos   */
+    --claro:       #889693;  /* textos secundarios */
+    --fondo:       #F4F7F6;  /* fondo de la página */
+    --blanco:      #FFFFFF;  /* fondo de la card   */
+    --texto:       #1B1B1B;  /* texto principal    */
+    --texto-suave: #6C757D;  /* subtítulos, hints  */
+    --error:       #DC3545;  /* mensajes de error  */
+    --borde:       #E2E8E7;  /* bordes y líneas    */
+  }
+
+  /* ═══════════════════════════════════════════
+     RESET BÁSICO
+     ═══════════════════════════════════════════
+     Este reset los elimina para tener control total.
+     box-sizing: border-box hace que el padding
+     NO aumente el tamaño del elemento — lo incluye adentro.
+  */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  /* ═══════════════════════════════════════════
+     BODY — Contenedor principal de toda la página
+     ═══════════════════════════════════════════
+     display: flex + align-items + justify-content
+     centrado al 100 vertical como horizontalmente.
+  */
+  body {
+    font-family: 'DM Sans', sans-serif; /* fuente importada arriba */
+    background: var(--fondo);           /* fondo gris claro        */
+    min-height: 100vh;                  /* altura completa         */
+    display: flex;                      /* activa flexbox          */
+    align-items: center;                /* centra verticalmente    */
+    justify-content: center;            /* centra horizontalmente  */
+  }
+
+  /* ═══════════════════════════════════════════
+     CARD — La caja blanca del formulario
+     ═══════════════════════════════════════════
+     Es el rectángulo blanco que contiene todo el login.
+  */
+  .card {
+    background: var(--blanco);
+    border-radius: 12px;        /* esquinas redondeadas    */
+    padding: 48px 44px;         /* espacio interior        */
+    width: 100%;                /*ocupa todo el ancho dsponible en dispositivo*/
+    max-width: 400px;           /*nunca sera mas ancho*/
+    border: 1px solid var(--borde);
+    animation: fadeIn 0.4s ease both; /* aparece suavemente al cargar */
+  }
+
+  /* ═══════════════════════════════════════════
+     ANIMACIÓN fadeIn
+     ═══════════════════════════════════════════
+     Define cómo aparece la card al cargar la página.
+     "from" = estado inicial (invisible, un poco abajo)
+     "to"   = estado final   (visible, en su posición)
+     Esto crea el efecto de que la card "sube" suavemente.
+  */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;                  /* invisible          */
+      transform: translateY(12px); /* 12px más abajo     */
+    }
+    to {
+      opacity: 1;                  /* completamente visible */
+      transform: translateY(0);    /* en su posición normal */
+    }
+  }
+
+  /* Título principal "Gestión de Equipos" */
+  h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--principal);
+    margin-bottom: 5px;
+  }
+
+  /* Texto pequeño debajo del título */
+  .subtitulo {
+    font-size: 10px;
+    color: var(--claro);
+    margin-bottom: 28px;
+    line-height: 1.5; /* espacio entre líneas de texto */
+  }
+
+  /* Línea horizontal divisora — solo decoración */
+  .divisor {
+    height: 1px;
+    background: var(--borde);
+    margin-bottom: 28px;
+  } 
+
+  /* Contenedor de cada campo (label + input) */
+  .campo {
+    margin-bottom: 18px;
+  }
+
+  /* Etiqueta del campo (Correo electrónico) */
+  label {
+    display: block;       /* ocupa su propia línea   */
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--texto);
+    margin-bottom: 7px;
+  }
+
+  /* ═══════════════════════════════════════════
+     INPUT-WRAP — Contenedor relativo del input
+     ═══════════════════════════════════════════
+     position: relative es necesario para que el ícono
+     pueda posicionarse DENTRO del input y tener espacio
+  */
+  .input-wrap {
+    position: relative;
+  }
+
+  /* ═══════════════════════════════════════════
+     INPUTS — Campos de texto
+     ═══════════════════════════════════════════
+     padding-left: 40px deja espacio para el ícono SVG
+     que está posicionado a la izquierda.
+     outline: none quita el borde azul del navegador
+     al hacer clic — nosotros ponemos el nuestro con :focus
+  */
+  input[type="email"],
+  input[type="password"],
+  input[type="text"] {
+    width: 100%;
+    padding: 11px 14px 11px 40px; /* arriba | derecha | abajo | izquierda */
+    border: 1.5px solid var(--borde);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--texto);
+    background: var(--blanco);
+    transition: border-color 0.2s; /* animación suave al hacer foco */
+    outline: none;                 /* quitamos el borde del navegador */
+  }
+
+  /* Texto de ayuda dentro del input cuando está vacío */
+  input::placeholder {
+    color: #C0CBCA;
+  }
+
+  /* Cuando el usuario hace clic en el input (foco) */
+  input:focus {
+    border-color: var(--secundario); /* borde verde al enfocar */
+  }
+
+  /* ═══════════════════════════════════════════
+     ÍCONO DENTRO DEL INPUT
+     ═══════════════════════════════════════════
+     position: absolute lo posiciona DENTRO del input-wrap
+     top: 50% + transform: translateY(-50%) = centra verticalmente
+     pointer-events: none = el ícono no bloquea clics al input
+  */
+  .input-icon {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%); /* centrado vertical perfecto */
+    width: 16px;
+    height: 16px;
+    stroke: var(--claro);        /* color del ícono SVG        */
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;        /* no interfiere con clics    */
+    transition: stroke 0.2s;     /* animación de color suave   */
+  }
+
+  /*
+    Cuando el input está enfocado, el ícono cambia de color.
+    focus-within = cuando CUALQUIER hijo del contenedor tiene foco
+  */
+  .input-wrap:focus-within .input-icon {
+    stroke: var(--secundario);
+  }
+
+  /* ═══════════════════════════════════════════
+     BOTÓN OJO — Mostrar/ocultar contraseña
+     ═══════════════════════════════════════════
+     Está posicionado a la DERECHA del input de contraseña.
+     Al hacer clic cambia type="password" a type="text"
+     y viceversa (esto lo hace el JavaScript abajo).
+  */
+  .toggle-pass {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    display: flex;
+  }
+
+  .toggle-pass svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--claro);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke 0.2s;
+  }
+
+  .toggle-pass:hover svg {
+    stroke: var(--secundario); /* verde al pasar el mouse */
+  }
+
+  /* ═══════════════════════════════════════════
+     FILA DE OPCIONES — Recordarme + ¿Olvidaste?
+     ═══════════════════════════════════════════
+     display: flex + justify-content: space-between
+     pone un elemento a la izquierda y otro a la derecha.
+  */
+  .opciones {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* izq y der */
+    margin-bottom: 24px;
+  }
+
+  /* Checkbox "Recordarme" con su texto */
+  .recordar {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    color: var(--texto-suave);
+    cursor: pointer;
+    user-select: none; /* evita que se seleccione el texto al hacer clic */
+  }
+
+  .recordar input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    padding: 0;
+    accent-color: var(--principal); /* color del checkbox cuando está marcado */
+    cursor: pointer;
+  }
+
+  /* Link "¿Olvidaste tu contraseña?" */
+  .olvidaste {
+    font-size: 13px;
+    color: var(--secundario);
+    text-decoration: none; /* sin subrayado por defecto */
+    font-weight: 500;
+  }
+
+  .olvidaste:hover {
+    text-decoration: underline; /* subrayado al pasar el mouse */
+  }
+
+  /* ═══════════════════════════════════════════
+     BOTÓN INICIAR SESIÓN
+     ═══════════════════════════════════════════
+     width: 100% = ocupa todo el ancho disponible
+     transition: permite animaciones suaves en hover y clic
+  */
+  .btn-login {
+    width: 100%;
+    padding: 12px;
+    background: var(--principal);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  /* Color cambia a verde secundario al pasar el mouse */
+  .btn-login:hover {
+    background: var(--secundario);
+  }
+
+  /* Se encoge ligeramente al hacer clic — efecto de presión */
+  .btn-login:active {
+    transform: scale(0.99);
+  }
+
+  /* Cuando está deshabilitado (durante la carga) */
+  .btn-login:disabled {
+    opacity: 0.7;
+    cursor: not-allowed; /* cursor de "no disponible" */
+  }
+
+  /* ═══════════════════════════════════════════
+     MENSAJE DE ERROR
+     ═══════════════════════════════════════════
+     Por defecto está OCULTO (display: none).
+     Cuando el JavaScript agrega la clase "visible"
+     se muestra como flex — esto lo activa el JS abajo.
+  */
+  .error-msg {
+    display: none;          /* oculto por defecto          */
+    background: #FFF5F5;    /* fondo rojo muy claro        */
+    border: 1px solid #FED7D7;
+    border-radius: 7px;
+    padding: 9px 13px;
+    font-size: 13px;
+    color: var(--error);
+    margin-bottom: 18px;
+    align-items: center;
+    gap: 7px;
+  }
+
+  /* Cuando JS agrega esta clase, el mensaje aparece */
+  .error-msg.visible {
+    display: flex;
+  }
+
+  /* Pie de página con versión y año */
+  .footer-card {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--borde);
+    text-align: center;
+    font-size: 12px;
+    color: var(--claro);
+  }
+
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     CARD PRINCIPAL — Todo el login está aquí dentro
+     ═══════════════════════════════════════════ -->
+<div class="card">
+
+  <!-- Título principal -->
+  <h1>Gestión de Equipos</h1>
+
+  <!-- Texto de instrucción -->
+  <p class="subtitulo">Ingresa tus credenciales para continuar.</p>
+
+  <!-- Línea divisora decorativa -->
+  <div class="divisor"></div>
+
+  <!-- ═══════════════════════════════════════════
+       MENSAJE DE ERROR
+       Está oculto por defecto.
+       El JavaScript lo muestra si el login falla.
+       ═══════════════════════════════════════════ -->
+  <div class="error-msg" id="error-msg">
+    <!-- Ícono de advertencia SVG -->
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="8" x2="12" y2="12"/>
+      <line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <!-- El texto del error lo cambia el JavaScript -->
+    <span id="error-text">Correo o contraseña incorrectos.</span>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       FORMULARIO DE LOGIN
+       novalidate = desactivamos la validación del navegador
+       para manejarla nosotros con JavaScript
+       ═══════════════════════════════════════════ -->
+  <form id="login-form" novalidate>
+
+    <!-- CAMPO EMAIL -->
+    <div class="campo">
+      <label for="email">Correo electrónico</label>
+      <div class="input-wrap">
+        <!-- Ícono de sobre (email) — SVG dibujado con código -->
+        <svg class="input-icon" viewBox="0 0 24 24">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        <!--
+          type="email" = el navegador valida formato de email
+          autocomplete="email" = el navegador puede autocompletar
+          required = campo obligatorio
+        -->
+        <input type="email" id="email" placeholder="tu@correo.com" autocomplete="email" required/>
+      </div>
+    </div>
+
+    <!-- CAMPO CONTRASEÑA -->
+    <div class="campo">
+      <label for="password">Contraseña</label>
+      <div class="input-wrap">
+        <!-- Ícono de candado -->
+        <svg class="input-icon" viewBox="0 0 24 24">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <!--
+          type="password" = oculta el texto con puntos ••••
+          El JavaScript cambia esto a "text" para mostrar la contraseña
+        -->
+        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required/>
+
+        <!-- Botón ojo — muestra/oculta la contraseña -->
+        <button type="button" class="toggle-pass" id="toggle-pass">
+          <!-- El JS reemplaza el interior de este SVG al hacer clic -->
+          <svg id="eye-icon" viewBox="0 0 24 24">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- FILA: Recordarme + ¿Olvidaste tu contraseña? -->
+    <div class="opciones">
+      <label class="recordar">
+        <input type="checkbox" id="recordar">
+        Recordarme
+      </label>
+      <a href="#" class="olvidaste">¿Olvidaste tu contraseña?</a>
+    </div>
+
+    <!-- BOTÓN ENVIAR -->
+    <button type="submit" class="btn-login" id="btn-login">
+      Iniciar sesión
+    </button>
+
+  </form>
+
+  <!-- Pie de página informativo -->
+  <div class="footer-card">
+    Gestión de Equipos &nbsp;·&nbsp; v1.0.0 &nbsp;·&nbsp; © 2024
+  </div>
+
+</div><!-- fin .card -->
+
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT — Lógica del formulario
+     Va al final del body para que el HTML
+     ya esté cargado cuando el JS se ejecute.
+     ═══════════════════════════════════════════ -->
+<script>
+
+  // ─────────────────────────────────────────
+  // MOSTRAR / OCULTAR CONTRASEÑA
+  // ─────────────────────────────────────────
+
+  // Obtenemos referencias a los elementos del HTML
+  const togglePass   = document.getElementById('toggle-pass');
+  const passwordInput = document.getElementById('password');
+  const eyeIcon      = document.getElementById('eye-icon');
+
+  // Cuando se hace clic en el botón ojo...
+  togglePass.addEventListener('click', () => {
+
+    // ¿El input está en modo contraseña (oculto)?
+    const isPassword = passwordInput.type === 'password';
+
+    // Cambiamos el tipo: si era "password" pasa a "text" y viceversa
+    passwordInput.type = isPassword ? 'text' : 'password';
+
+    // Cambiamos el ícono del ojo según el estado
+    eyeIcon.innerHTML = isPassword
+      // Ojo tachado = contraseña visible
+      ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`
+      // Ojo normal = contraseña oculta
+      : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+  });
+
+
+  // ─────────────────────────────────────────
+  // ENVÍO DEL FORMULARIO
+  // ─────────────────────────────────────────
+
+  // Referencias a elementos que vamos a usar
+  const form     = document.getElementById('login-form');
+  const btnLogin = document.getElementById('btn-login');
+  const errorMsg = document.getElementById('error-msg');
+  const errorText = document.getElementById('error-text');
+
+  // Cuando el usuario hace clic en "Iniciar sesión"...
+  form.addEventListener('submit', (e) => {
+
+    // e.preventDefault() evita que la página se recargue
+    // (comportamiento por defecto de los formularios HTML)
+    e.preventDefault();
+
+    // Obtenemos los valores que escribió el usuario
+    const email    = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    // Ocultamos cualquier mensaje de error previo
+    errorMsg.classList.remove('visible');
+
+    // VALIDACIÓN: ¿están los campos vacíos?
+    if (!email || !password) {
+      errorText.textContent = 'Por favor completa todos los campos.';
+      errorMsg.classList.add('visible'); // mostramos el error
+      return; // detenemos aquí, no seguimos
+    }
+
+    // Simulamos que estamos verificando con el servidor
+    // En el sistema real aquí iría la llamada a la API
+    btnLogin.textContent = 'Verificando...';
+    btnLogin.disabled = true; // deshabilitamos el botón para evitar doble clic
+
+    // setTimeout simula una espera de 1.5 segundos (como si fuera red)
+    // En el sistema real esto se reemplaza por fetch() a la API
+    setTimeout(() => {
+      btnLogin.textContent = 'Iniciar sesión';
+      btnLogin.disabled = false;
+      // Mostramos error de credenciales incorrectas
+      errorText.textContent = 'Correo o contraseña incorrectos.';
+      errorMsg.classList.add('visible');
+    }, 1500);
+
+  });
+
+</script>
+</body>
+</html>
