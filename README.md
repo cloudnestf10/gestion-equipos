@@ -8,7 +8,7 @@ Sistema web para el control e inventario de equipos tecnológicos.
 
 Este sistema permite registrar, rastrear y auditar el ciclo de vida completo de los equipos tecnológicos (laptops, cámaras, micrófonos, switches, monitores, entre otros) distribuidos en 9 inmuebles.
 
-Cada equipo tiene trazabilidad completa: desde su ingreso hasta su baja, pasando por traslados, asignaciones y envíos a taller.
+Cada equipo tiene trazabilidad desde su ingreso hasta su baja, pasando por traslados, asignaciones y envíos a taller.
 
 ## ✨ Funcionalidades
 
@@ -107,7 +107,6 @@ Bloque 7 — Bitacora         → Bitacora
 |------|-----------|
 | Frontend | HTML, CSS, JavaScript |
 | Base de datos | PostgreSQL (Supabase) |
-| Autenticación | Supabase Auth |
 | Fuentes | Google Fonts — DM Sans |
 
 ---
