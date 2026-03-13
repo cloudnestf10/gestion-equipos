@@ -26,7 +26,7 @@ Cada equipo tiene trazabilidad completa: desde su ingreso hasta su baja, pasando
 | Pantalla | Descripción |
 |----------|-------------|
 | [login.html](./login.html) | Acceso al sistema |
-| [dashboard.html](./dashboard.html) | Resumen general y estadísticas |
+| [resumen.html](./resumen.html) | Resumen general y estadísticas |
 | [equipos.html](./equipos.html) | Lista de equipos con filtros |
 | [nuevo-equipo.html](./nuevo-equipo.html) | Formulario de registro de equipo |
 | [detalle-equipo.html](./detalle-equipo.html) | Detalle, historial y bitácora del equipo |
